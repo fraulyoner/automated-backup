@@ -7,13 +7,22 @@ usage ()
 cat <<EOF
 
 USAGE:	$0 options
-	This script creates a backup for the current state of an application.
-	The configuration is stored in the file backup.conf (e.g. the database name, if war file should be saved, folders/files to be saved etc.)
-	Current database state is saved in a mysql dump. The user data for the databases must be stored in a mysql config file.
+This script creates a backup for the current state of an application.
+The configuration is stored in the file backup.conf (e.g. the database name, if war file should be saved, folders/files to be saved etc.)
+Current database state is saved in a mysql dump. The user data for the databases must be stored in a mysql config file.
 
 OPTIONS:
-	-h Show this help message
+-h Show this help message
+-c Specify the absolute path of the configuration file that should be used for the backup scrpt; 
+   if you specify nothing the script tries to use a file named backup.conf that is in the same directory like the script 
  
+EXAMPLE:
+# executes the backup script using the backup.conf that is in the same dir like the script
+$0
+# executes the backup script using the given file custom.conf
+$0 -c /home/user/anydir/custom.conf
+# show help
+$0 -h
 EOF
 }
 
@@ -27,7 +36,7 @@ fi
 
 # no file found for the given variable
 if [ ! -f "$CONF_FILE" ]; then
-	echo "No configuration file found"
+	echo "No configuration file found for $CONF_FILE"
 	exit 1
 fi
 
@@ -163,16 +172,28 @@ done
 
 # functions end
 
-while getopts "h" OPTION; do
+CONF_FILE=
+
+while getopts "hc:" OPTION; do
 case "$OPTION" in
 	h)
-	usage
-	exit 0
-	;;	
+		usage
+		exit 0
+		;;
+	c)
+		CONF_FILE=$OPTARG
+		;;
+	?)
+		usage
+		exit 1
+		;;
 esac
 done
 
-CONF_FILE="$(dirname "$0")/backup.conf"
+# if no conf file specified, use default value
+if [ -z "$CONF_FILE" ]; then
+	CONF_FILE="$(dirname "$0")/backup.conf"
+fi
 read_in_conf_and_validate
 
 CURRENT_DATE="$(date +%Y-%m-%d_%H-%M)"

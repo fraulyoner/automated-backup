@@ -172,7 +172,8 @@ done
 
 # functions end
 
-CONF_FILE=
+# default config file
+CONF_FILE="$(dirname "$0")/backup.conf"
 
 while getopts "hc:" OPTION; do
 case "$OPTION" in
@@ -190,10 +191,6 @@ case "$OPTION" in
 esac
 done
 
-# if no conf file specified, use default value
-if [ -z "$CONF_FILE" ]; then
-	CONF_FILE="$(dirname "$0")/backup.conf"
-fi
 read_in_conf_and_validate
 
 CURRENT_DATE="$(date +%Y-%m-%d_%H-%M)"

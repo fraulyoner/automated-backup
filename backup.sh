@@ -68,13 +68,13 @@ create_backup_dir ()
 # check if backup dir exists, if not create it
 if [ ! -d "$BACKUP_PATH" ]; then
 	mkdir "$BACKUP_PATH"
-	echo "Create parent backup directory $(readlink -f "$BACKUP_PATH")"
+	echo "Creating parent backup directory $(readlink -f "$BACKUP_PATH")"
 fi
 
 # check if there is already a dir for current date, if not create it
 if [ ! -d "$FULL_BACKUP_PATH" ]; then
 	mkdir "$FULL_BACKUP_PATH"
-	echo "Create backup directory $(readlink -f "$FULL_BACKUP_PATH")"
+	echo "Creating backup directory $(readlink -f "$FULL_BACKUP_PATH")"
 else
 	echo "$(readlink -f "$FULL_BACKUP_PATH") already exists"
 	echo "Wait until $(readlink -f "$BACKUP_PATH/$(date -d '+1min' +%Y-%m-%d_%H-%M)") can be created"
@@ -120,7 +120,7 @@ elif [ "$WAR" -eq 1 ]; then
 fi
 
 if [ "$SAVE_WAR" -eq 1 ]; then
-	echo "Backup war file: "
+	echo "Backupping war file: "
 	cp -v "$WEBAPP_PATH"/../*.war "$FULL_BACKUP_PATH"
 fi
 
@@ -135,7 +135,7 @@ do
 	mysqldump --defaults-file="$MYSQL_CONF" --defaults-group-suffix="$db" "$db" > "$FULL_BACKUP_PATH/$db-$CURRENT_DATE.dump.sql" 2>/dev/null
   # creating dump was successful, so return value is 0
 	if [ "$?" -eq 0 ]; then
-		echo "Create dump for database $db: $(readlink -f "$FULL_BACKUP_PATH/$db-$CURRENT_DATE.dump.sql")"
+		echo "Creating dump for database $db: $(readlink -f "$FULL_BACKUP_PATH/$db-$CURRENT_DATE.dump.sql")"
 	# something went wrong while trying create dump (e.g. access denied), so return value is not 0 but any other number
 	else
 		echo "Problems encountered while trying to create dump for database $db"
@@ -151,21 +151,21 @@ ACTION_NAME="$2"
 case "$ACTION_NAME" in
 	cp)
 		ACTION='cp -r'
-		ACTION_MSG="copy"
+		ACTION_MSG="Copying"
 		;;
 	mv)
     ACTION='mv'
-		ACTION_MSG="move"
+		ACTION_MSG="Moving"
     ;;
 esac
 
 for i in $CONTENT
 do
 	if [ -d "$i" ] || [ -f "$i" ]; then
-		echo "Do $ACTION_MSG $(readlink -f "$i") into backup dir"
+		echo "$ACTION_MSG $(readlink -f "$i") into backup dir"
 		$ACTION "$i" "$FULL_BACKUP_PATH"
 	else
-		echo "Can not $ACTION_MSG $i: does not exist";	
+		echo "$ACTION_MSG $i not possible: does not exist";	
 	fi
 done
 }

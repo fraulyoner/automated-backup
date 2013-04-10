@@ -43,19 +43,19 @@ fi
 # read in variables of conf file
 . "$CONF_FILE"
 
-# assure that conf file contains all required variables
+# make sure that conf file contains all required variables
 if [ -z "$WEBAPP_PATH" ] || [ -z "$BACKUP_PATH" ] || [ -z "$DB_NAME" ] || [ -z "$MYSQL_CONF" ]; then
 	echo "Configuration file seems to be incorrect: required variables missing. Please check your config file: $(readlink -f "$CONF_FILE")"
 	exit 1
 fi
 
-# assure that WEBAPP_PATH exists
+# make sure that WEBAPP_PATH exists
 if [ ! -d "$WEBAPP_PATH" ]; then
 	echo "The given webapp path does not exist. Please check your config file: $(readlink -f "$CONF_FILE")"
 	exit 1
 fi
 
-# assure that mysql config file exists
+# make sure that mysql config file exists
 if [ ! -f "$MYSQL_CONF" ]; then
 	echo "The given mysql config file does not exist. Please check your config file: $(readlink -f "$CONF_FILE")"
 	exit 1

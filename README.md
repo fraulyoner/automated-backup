@@ -9,4 +9,4 @@ However the backup process was still manual - although you always perform the sa
 The typical backup steps before a deployment are:
 * saving war file resp. information about the current deployed version
 * saving database data in a dump
-* saving directories and/or files, e.g. log files, generated error reports, etc.
+* saving directories and/or files, e.g. generated error reports

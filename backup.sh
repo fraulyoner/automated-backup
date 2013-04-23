@@ -129,7 +129,13 @@ fi
 
 dump_dbs () 
 {
-for db in $DB_NAME
+# split string into array
+OIFS=$IFS
+IFS=";"
+DB_ARR=( $DB_NAME )
+IFS=$OIFS
+
+for db in "${DB_ARR[@]}"
 do
 	# create dump and hide mysqldump errors due to own error handling
 	mysqldump --defaults-file="$MYSQL_CONF" --defaults-group-suffix="$db" "$db" > "$FULL_BACKUP_PATH/$db-$CURRENT_DATE.dump.sql" 2>/dev/null
@@ -159,13 +165,19 @@ case "$ACTION_NAME" in
     ;;
 esac
 
-for i in $CONTENT
+# split string into array
+OIFS=$IFS
+IFS=";"
+ARR=( $CONTENT )
+IFS=$OIFS
+
+for i in "${ARR[@]}"
 do
 	if [ -d "$i" ] || [ -f "$i" ]; then
 		echo "$ACTION_MSG $(readlink -f "$i") into backup dir"
 		$ACTION "$i" "$FULL_BACKUP_PATH"
 	else
-		echo "$ACTION_MSG $i not possible: does not exist";	
+		echo "$ACTION_MSG $i not possible: does not exist";
 	fi
 done
 }
